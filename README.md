@@ -1,2 +1,3 @@
-# niche-works-web-utils
+# @niche-works/web-utils
+
 A niche library for web.
