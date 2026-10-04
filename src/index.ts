@@ -5,4 +5,3 @@ export * as loadScript from './loadScript';
 export * as requestInterval from './requestInterval';
 export * as requestTimeout from './requestTimeout';
 export type * from './types';
-export * as unit from './unit';

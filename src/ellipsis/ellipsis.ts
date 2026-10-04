@@ -1,5 +1,11 @@
 const isHalfWidth = /[\u0020-\u007E]/;
 
+/**
+ * 文字列をエレメントのサイズに収まる長さに編集して返す
+ * @param text 文字列
+ * @param element 文字列の描画対象のエレメント
+ * @returns エレメントに収まる長さの文字列
+ */
 export default function ellipsis(
   text: string | null | undefined,
   element: HTMLElement,

@@ -1,6 +1,6 @@
 {
   "name": "@niche-works/web-utils",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "private": true,
   "keywords": [
     "browser",
@@ -8,7 +8,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/mitsuhiroseino/niche-works-web-utils.git"
+    "url": "git+https://github.com/mitsuhiroseino/niche-works-web-utils.git"
   },
   "license": "MIT",
   "author": "Mitsuhiro Seino",
@@ -38,7 +38,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "@niche-works/dev": "^0.5.4",
+    "@niche-works/dev": "^0.5.5",
     "@niche-works/rollup-plugin-dist-package": "^0.2.2",
     "@tsdown/css": "^0.22.0",
     "@types/node": "^25.5.0",
