@@ -1,6 +1,6 @@
 {
-  "name": "@niche-works/web-utils",
-  "version": "0.2.0",
+  "name": "@fringeworks/web-utils",
+  "version": "0.8.0",
   "private": true,
   "keywords": [
     "browser",
@@ -8,7 +8,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mitsuhiroseino/niche-works-web-utils.git"
+    "url": "git+https://github.com/fringeworks-js/web-utils.git"
   },
   "license": "MIT",
   "author": "Mitsuhiro Seino",
@@ -30,7 +30,7 @@
     "tidy": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json}\" --config ./prettier.tidy.config.js"
   },
   "dependencies": {
-    "@niche-works/types": "^0.3.2",
+    "@fringeworks/types": "^0.8.0",
     "clsx": "^2.1.1",
     "csstype": "^3.2.3",
     "remeda": "^2.33.6",
@@ -38,8 +38,8 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "@niche-works/dev": "^0.5.5",
-    "@niche-works/rollup-plugin-dist-package": "^0.2.2",
+    "@fringeworks/dev": "^0.8.0",
+    "@fringeworks/rollup-plugin-dist-package": "^0.8.0",
     "@tsdown/css": "^0.22.0",
     "@types/node": "^25.5.0",
     "@vitest/coverage-v8": "^4.1.8",
@@ -57,5 +57,5 @@
     "typescript-eslint": "^8.59.2",
     "vitest": "^4.1.8"
   },
-  "packageManager": "pnpm@10.32.1"
+  "packageManager": "pnpm@12.3.4+sha512.961aa41fb077da3a04a441d9f8e15ebc0c96da8ef710b2eb67bf9ee7cb0610eabd48f1fd85f51cffe73846785fa0f87c56a3a872a1d893f8446741b5cce45457"
 }

@@ -1,3 +1,3 @@
-# @niche-works/web-utils
+# @fringeworks/web-utils
 
 A niche library for web.
