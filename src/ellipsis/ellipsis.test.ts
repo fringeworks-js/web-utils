@@ -1,7 +1,11 @@
 import ellipsis from './ellipsis';
 
 // テキスト長がoverflowThresholdを超えるとスクロールが発生するモック要素を生成する
-function createMockElement(clientWidth = 100, clientHeight = 50, overflowThreshold = Infinity) {
+function createMockElement(
+  clientWidth = 100,
+  clientHeight = 50,
+  overflowThreshold = Infinity,
+) {
   return {
     clientWidth,
     clientHeight,

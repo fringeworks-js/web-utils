@@ -110,8 +110,8 @@ importers:
   .:
     dependencies:
       '@fringeworks/types':
-        specifier: ^0.8.0
-        version: 0.8.0
+        specifier: link:../types
+        version: link:../types
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
@@ -121,16 +121,13 @@ importers:
       remeda:
         specifier: ^2.33.6
         version: 2.33.7
-      tslib:
-        specifier: ^2.8.1
-        version: 2.8.1
     devDependencies:
       '@eslint/js':
         specifier: ^10.0.1
         version: 10.0.1(eslint@10.4.1(supports-color@7.2.0))
       '@fringeworks/dev':
-        specifier: ^0.9.2
-        version: 0.9.2
+        specifier: ^0.9.3
+        version: 0.9.3
       '@fringeworks/rollup-plugin-dist-package':
         specifier: ^0.8.1
         version: 0.8.1(rollup@4.64.0)
@@ -431,16 +428,13 @@ packages:
     resolution: {integrity: sha512-+CNAzxglkrpNf/kKywqQfk74QjtceuOE7Qm+AF8miRvPF/wmmK5+OJOgVh3AVTT3RP2mH3+FOaxlE5v72owk0A==}
     engines: {node: ^20.19.0 || ^22.13.0 || >=24}
 
-  '@fringeworks/dev@0.9.2':
-    resolution: {integrity: sha512-h+iKiPSsrTMkSZh+H+4hUEjEel6iSaACv1mWi64s5ymn1zcM5nizRv7oaQkoD6QN3iPYyaxSehz9PBtf/ZJ7UQ==}
+  '@fringeworks/dev@0.9.3':
+    resolution: {integrity: sha512-dcLp94c/IElHXUx1F+ph8JbKmwFTOy4cHyBuqgQmvWlaP6l1nQiomqJ2ac6D6WsihjN/3vLUZH81jbN3Oyswuw==}
 
   '@fringeworks/rollup-plugin-dist-package@0.8.1':
     resolution: {integrity: sha512-bowRWF5tCGGDS1oEfrkWviF3+sh+U9AGP611eM4aHYKYKWTE8EXFvoN3/uZo7fc10CTssn/U7yrMpUirAfpB3w==}
     peerDependencies:
       rollup: ^4.0.0
-
-  '@fringeworks/types@0.8.0':
-    resolution: {integrity: sha512-p4ix9hCO4ROZO+rn0CN02/0QjTcZl1/sV7CDxQWwC8IxEIZXtFqbbKrdZNWWlNexcGADZSzUZDncUF5/K75NTw==}
 
   '@humanfs/core@0.19.2':
     resolution: {integrity: sha512-UhXNm+CFMWcbChXywFwkmhqjs3PRCmcSa/hfBgLIb7oQ5HNb1wS0icWsGtSAUNgefHeI+eBrA8I1fxmbHsGdvA==}
@@ -2227,7 +2221,7 @@ snapshots:
       '@eslint/core': 1.2.1
       levn: 0.4.1
 
-  '@fringeworks/dev@0.9.2':
+  '@fringeworks/dev@0.9.3':
     dependencies:
       fast-glob: 3.3.3
       fs-extra: 11.4.1
@@ -2242,8 +2236,6 @@ snapshots:
       sort-package-json: 3.6.1
       tslib: 2.8.1
       type-fest: 5.10.0
-
-  '@fringeworks/types@0.8.0': {}
 
   '@humanfs/core@0.19.2':
     dependencies:

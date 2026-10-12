@@ -4,9 +4,9 @@
  * @param timeout
  */
 export default function requestTimeout(callback: () => void, timeout: number) {
-  let requestId;
+  let requestId: number;
   const start = performance.now();
-  function fnc(now) {
+  function fnc(now: number) {
     if (now - start >= timeout) {
       callback();
     } else {

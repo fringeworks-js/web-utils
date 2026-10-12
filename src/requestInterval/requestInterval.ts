@@ -13,7 +13,11 @@ export default function requestInterval<A extends unknown[]>(
   delay: number,
   options: RequestIntervalOptions<A> = {},
 ) {
-  const { args = [] as A, immediate = false, maxCount = Infinity } = options;
+  const {
+    args = [] as unknown as A,
+    immediate = false,
+    maxCount = Infinity,
+  } = options;
 
   let requestId: number;
   let last = performance.now();

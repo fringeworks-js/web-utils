@@ -25,8 +25,9 @@ export default async function loadScript(
     onAbort,
   } = options;
 
-  if (loading.has(src)) {
-    return loading.get(src);
+  const loadingPromise = loading.get(src);
+  if (loadingPromise) {
+    return loadingPromise;
   }
 
   const existingId = scripts.get(src);

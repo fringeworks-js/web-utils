@@ -1,6 +1,6 @@
 {
   "name": "@fringeworks/web-utils",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "private": true,
   "description": "A library some will find handy, providing utilities for the web.",
   "keywords": [
@@ -31,15 +31,14 @@
     "tidy": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json}\" --config ./prettier.tidy.config.js"
   },
   "dependencies": {
-    "@fringeworks/types": "^0.8.0",
+    "@fringeworks/types": "link:../types",
     "clsx": "^2.1.1",
     "csstype": "^3.2.3",
-    "remeda": "^2.33.6",
-    "tslib": "^2.8.1"
+    "remeda": "^2.33.6"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "@fringeworks/dev": "^0.9.2",
+    "@fringeworks/dev": "^0.9.3",
     "@fringeworks/rollup-plugin-dist-package": "^0.8.1",
     "@tsdown/css": "^0.22.0",
     "@types/node": "^25.5.0",

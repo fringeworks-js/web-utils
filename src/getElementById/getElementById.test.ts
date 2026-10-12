@@ -12,7 +12,9 @@ describe('getElementById', () => {
   });
 
   it('存在しないIDの場合nullを返す', () => {
-    vi.stubGlobal('document', { getElementById: vi.fn().mockReturnValue(null) });
+    vi.stubGlobal('document', {
+      getElementById: vi.fn().mockReturnValue(null),
+    });
     expect(getElementById('non-existent')).toBeNull();
   });
 
@@ -25,7 +27,9 @@ describe('getElementById', () => {
 
   it('型パラメータで指定した型にキャストして返す', () => {
     const input = { id: 'my-input', value: 'hello' } as HTMLInputElement;
-    vi.stubGlobal('document', { getElementById: vi.fn().mockReturnValue(input) });
+    vi.stubGlobal('document', {
+      getElementById: vi.fn().mockReturnValue(input),
+    });
     const result = getElementById<HTMLInputElement>('my-input');
     expect(result?.value).toBe('hello');
   });

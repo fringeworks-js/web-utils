@@ -42,7 +42,7 @@ export default function ellipsis(
 
   if (isTrimed) {
     if (result.length > 3) {
-      while (_isUnwrappable(result[result.length - 1])) {
+      while (_isUnwrappable(result.charAt(result.length - 1))) {
         result = result.substring(0, result.length - 1);
       }
     }
