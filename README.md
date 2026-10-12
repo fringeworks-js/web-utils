@@ -1,3 +1,3 @@
 # @fringeworks/web-utils
 
-A niche library for web.
+`@fringeworks/web-utils` is a library some will find handy, providing utilities for the web.

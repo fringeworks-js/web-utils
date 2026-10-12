@@ -129,11 +129,11 @@ importers:
         specifier: ^10.0.1
         version: 10.0.1(eslint@10.4.1(supports-color@7.2.0))
       '@fringeworks/dev':
-        specifier: ^0.8.0
-        version: 0.8.0
+        specifier: ^0.9.2
+        version: 0.9.2
       '@fringeworks/rollup-plugin-dist-package':
-        specifier: ^0.8.0
-        version: 0.8.0(rollup@4.64.0)
+        specifier: ^0.8.1
+        version: 0.8.1(rollup@4.64.0)
       '@tsdown/css':
         specifier: ^0.22.0
         version: 0.22.2(postcss@8.5.10)(sass@1.99.0)(tsdown@0.22.2)(tsx@4.21.0)
@@ -431,11 +431,11 @@ packages:
     resolution: {integrity: sha512-+CNAzxglkrpNf/kKywqQfk74QjtceuOE7Qm+AF8miRvPF/wmmK5+OJOgVh3AVTT3RP2mH3+FOaxlE5v72owk0A==}
     engines: {node: ^20.19.0 || ^22.13.0 || >=24}
 
-  '@fringeworks/dev@0.8.0':
-    resolution: {integrity: sha512-YA+uqgbCzWHRWm7YSm32+kchKFI6PtlloGsghAEmNw/TfONN42tbm76/yOe8dHfErKplVc0oreI0EpzCBS9wQA==}
+  '@fringeworks/dev@0.9.2':
+    resolution: {integrity: sha512-h+iKiPSsrTMkSZh+H+4hUEjEel6iSaACv1mWi64s5ymn1zcM5nizRv7oaQkoD6QN3iPYyaxSehz9PBtf/ZJ7UQ==}
 
-  '@fringeworks/rollup-plugin-dist-package@0.8.0':
-    resolution: {integrity: sha512-ymifDraR1cZ8dk5gUaE6/CEnXO3sH9s12gHJlSIkyVWh3oDjkkmrB068GZH6Lm0vQnMcAmxsNRDwy9ww5jRROA==}
+  '@fringeworks/rollup-plugin-dist-package@0.8.1':
+    resolution: {integrity: sha512-bowRWF5tCGGDS1oEfrkWviF3+sh+U9AGP611eM4aHYKYKWTE8EXFvoN3/uZo7fc10CTssn/U7yrMpUirAfpB3w==}
     peerDependencies:
       rollup: ^4.0.0
 
@@ -2227,7 +2227,7 @@ snapshots:
       '@eslint/core': 1.2.1
       levn: 0.4.1
 
-  '@fringeworks/dev@0.8.0':
+  '@fringeworks/dev@0.9.2':
     dependencies:
       fast-glob: 3.3.3
       fs-extra: 11.4.1
@@ -2235,9 +2235,8 @@ snapshots:
       sass: 1.99.0
       type-fest: 5.10.0
 
-  '@fringeworks/rollup-plugin-dist-package@0.8.0(rollup@4.64.0)':
+  '@fringeworks/rollup-plugin-dist-package@0.8.1(rollup@4.64.0)':
     dependencies:
-      fast-glob: 3.3.3
       fs-extra: 11.4.1
       rollup: 4.64.0
       sort-package-json: 3.6.1
