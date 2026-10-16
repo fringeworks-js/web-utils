@@ -1,1 +1,1 @@
-export { default } from './getElementById';
+export { default, default as getElementById } from './getElementById';

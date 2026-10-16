@@ -1,2 +1,2 @@
-export { default } from './loadScript';
+export { default, default as loadScript } from './loadScript';
 export type * from './types';

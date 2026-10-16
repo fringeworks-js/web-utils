@@ -1,3 +1,4 @@
+import createExports from '@fringeworks/dev/createExports';
 import createExternal from '@fringeworks/dev/createExternal';
 import distPackage from '@fringeworks/rollup-plugin-dist-package';
 import copy from 'rollup-plugin-copy';
@@ -7,6 +8,7 @@ export default defineConfig({
   entry: [
     'src/**/*.{ts,tsx}',
     '!src/**/*.test.{ts,tsx}',
+    '!src/**/*.test-d.{ts,tsx}',
     '!src/**/*.d.{ts,tsx}',
   ],
   format: ['esm', 'cjs'],
@@ -16,48 +18,26 @@ export default defineConfig({
   clean: true,
   outDir: 'dist',
   minify: false,
-  css: {
-    inject: true,
-  },
   inputOptions: {
     external: createExternal(),
   },
   outputOptions: {
     preserveModules: true,
     preserveModulesRoot: 'src',
+    // default exportとnamed exportを併用するため、CJSでも名前付きで出力する
+    exports: 'named',
   },
   plugins: [
     distPackage({
       content: {
         main: './index.cjs',
         module: './index.mjs',
-        sideEffects: ['**/*.css'],
-        exports: {
-          '.': {
-            import: './index.mjs',
-            require: './index.cjs',
-          },
-          './*': {
-            import: './*/index.mjs',
-            require: './*/index.cjs',
-          },
-          './constants': {
-            import: './constants.mjs',
-            require: './constants.cjs',
-          },
-          './*/constants': {
-            import: './*/constants.mjs',
-            require: './*/constants.cjs',
-          },
-          './types': {
-            import: './types.mjs',
-            require: './types.cjs',
-          },
-          './*/types': {
-            import: './*/types.mjs',
-            require: './*/types.cjs',
-          },
-        },
+        types: './index.d.cts',
+        sideEffects: false,
+        exports: createExports({
+          target: 'dist',
+          extraExports: { './package.json': './package.json' },
+        }),
       },
       resolveWorkspaceDeps: true,
       range: '^',

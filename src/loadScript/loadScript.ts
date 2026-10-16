@@ -1,82 +1,72 @@
-import type { LoadScriptOptions, LoadScriptStatus } from './types';
+import type { LoadScriptOptions } from './types';
 
-// ロード済みのスクリプトを管理するMap
-const scripts = new Map<string, string>();
-// ロード中のスクリプトを管理するMap
-const loading = new Map<string, Promise<LoadScriptStatus>>();
+// ロード済みのスクリプトの要素を管理するMap（キーは絶対URL）
+const scripts = new Map<string, HTMLScriptElement>();
+// ロード中のスクリプトを管理するMap（キーは絶対URL）
+const loading = new Map<string, Promise<void>>();
 
 /**
- * 動的に外部のJavaScriptをロードする関数
+ * 動的に外部のJavaScriptをロードする関数。\
+ * 同じURLのスクリプトは、ロード中であれば同じPromiseを返し、ロード済みであれば再度ロードしない
+ * （`reload` を指定した場合を除く）。URLは絶対URLに変換して比較する
  * @param src ロードするJavaScriptのURL
  * @param options オプション
- * @returns ロードの状態
+ * @returns ロードが完了すると解決するPromise。ロードに失敗した場合は`NetworkError`でrejectする
  */
-export default async function loadScript(
+export default function loadScript(
   src: string,
   options: LoadScriptOptions = {},
-): Promise<LoadScriptStatus> {
-  const {
-    id = `loadscript-${performance.now()}`,
-    async = true,
-    defer = true,
-    reload,
-    onLoad,
-    onError,
-    onAbort,
-  } = options;
+): Promise<void> {
+  const { id, reload, crossOrigin, integrity, nonce } = options;
+  const key = new URL(src, document.baseURI).href;
 
-  const loadingPromise = loading.get(src);
+  const loadingPromise = loading.get(key);
   if (loadingPromise) {
     return loadingPromise;
   }
 
-  const existingId = scripts.get(src);
-  if (existingId != null && !reload) {
-    // 既にロードされている
-    onLoad?.();
-    return 'loaded';
+  const existing = scripts.get(key);
+  if (existing && !reload) {
+    return Promise.resolve();
   }
 
-  const promise = new Promise<LoadScriptStatus>((resolve) => {
+  const promise = new Promise<void>((resolve, reject) => {
     const script = document.createElement('script');
     script.src = src;
-    script.async = async;
-    script.defer = defer;
-    script.id = id;
-    script.onload = (event) => {
-      scripts.set(src, id);
-      onLoad?.(event);
-      resolve('loaded');
+    if (id != null) {
+      script.id = id;
+    }
+    if (crossOrigin != null) {
+      script.crossOrigin = crossOrigin;
+    }
+    if (integrity != null) {
+      script.integrity = integrity;
+    }
+    if (nonce != null) {
+      script.nonce = nonce;
+    }
+    script.onload = () => {
+      scripts.set(key, script);
+      resolve();
     };
-    script.onerror = (event) => {
-      _removeScript(id);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      onError?.(event as any);
-      resolve('error');
-    };
-    script.onabort = (event) => {
-      _removeScript(id);
-      onAbort?.(event);
-      resolve('aborted');
+    script.onerror = () => {
+      script.remove();
+      reject(
+        new DOMException(`Failed to load script "${src}".`, 'NetworkError'),
+      );
     };
 
-    if (existingId != null && reload) {
-      _removeScript(existingId);
+    if (existing) {
+      scripts.delete(key);
+      existing.remove();
     }
 
-    document.body.appendChild(script);
+    document.head.appendChild(script);
   }).finally(() => {
-    loading.delete(src);
+    loading.delete(key);
   });
 
-  loading.set(src, promise);
+  loading.set(key, promise);
 
   return promise;
-}
-
-function _removeScript(id: string) {
-  const script = document.getElementById(id);
-  if (script) {
-    script.remove();
-  }
 }

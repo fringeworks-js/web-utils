@@ -1,14 +1,6 @@
-import { CONSTANTS, PRIVATE, TEST_FILE } from '@fringeworks/dev/constants';
+import { CONSTANTS, PRIVATE, TEST_FILE } from '@fringeworks/dev';
 import generateIndexFiles from '@fringeworks/dev/generateIndexFiles';
 
 generateIndexFiles({
-  exclude: [
-    CONSTANTS,
-    PRIVATE,
-    TEST_FILE,
-    {
-      valueType: 'path',
-      conditions: 'src/css',
-    },
-  ],
+  exclude: [CONSTANTS, PRIVATE, TEST_FILE],
 });

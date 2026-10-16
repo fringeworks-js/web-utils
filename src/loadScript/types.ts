@@ -3,50 +3,30 @@
  */
 export type LoadScriptOptions = {
   /**
-   * script要素のid属性
-   * @default `loadscript-${performance.now()}`
+   * script要素のid属性。省略した場合は設定しない
    */
   id?: string;
 
   /**
-   * script要素のasync属性
-   * @default true
-   */
-  async?: boolean;
-
-  /**
-   * script要素のdefer属性
-   */
-  defer?: boolean;
-
-  /**
-   * 対象のscript要素が既に存在する場合、再度ロードするかどうか
+   * 既にロード済みの場合も、再度ロードするかどうか
+   *
+   * 既存のscript要素を削除してから、新しいscript要素を追加する。
+   * 既に実行されたスクリプトの処理は取り消されない
    */
   reload?: boolean;
 
   /**
-   * ロード完了時のコールバック
-   * @param event イベントオブジェクト。既にロード済みの場合はundefined
-   * @returns
+   * script要素のcrossorigin属性
    */
-  onLoad?: (event?: Event) => void;
+  crossOrigin?: 'anonymous' | 'use-credentials';
 
   /**
-   * エラー時のコールバック
-   * @param event イベントオブジェクト
-   * @returns
+   * script要素のintegrity属性（サブリソース完全性）
    */
-  onError?: (event: Event) => void;
+  integrity?: string;
 
   /**
-   * 中止時のコールバック
-   * @param event イベントオブジェクト
-   * @returns
+   * script要素のnonce属性（Content Security Policy）
    */
-  onAbort?: (event: Event) => void;
+  nonce?: string;
 };
-
-/**
- * ロードの状態
- */
-export type LoadScriptStatus = 'error' | 'aborted' | 'loaded' | 'loading';

@@ -1,9 +1,4 @@
-export type RequestIntervalOptions<A extends unknown[]> = {
-  /**
-   * コールバック関数に渡す引数
-   */
-  args?: A;
-
+export type RequestIntervalOptions = {
   /**
    * 初回を即時に実行するか
    *
@@ -15,9 +10,14 @@ export type RequestIntervalOptions<A extends unknown[]> = {
   immediate?: boolean;
 
   /**
-   * 実行回数の上限
+   * 実行回数の上限。0以下の場合は実行しない。`NaN` の場合は上限なしとして扱う
    *
    * @default Infinity
    */
   maxCount?: number;
+
+  /**
+   * 繰り返しを停止するための AbortSignal
+   */
+  signal?: AbortSignal;
 };
