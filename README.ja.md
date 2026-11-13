@@ -8,8 +8,6 @@
 
 ```bash
 npm install @fringeworks/web-utils
-# または
-pnpm add @fringeworks/web-utils
 ```
 
 ## 使い方
