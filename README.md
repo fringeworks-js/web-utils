@@ -27,12 +27,13 @@ import loadScript from '@fringeworks/web-utils/loadScript';
 
 ## API
 
-| Function                                     | Description                                                        |
-| -------------------------------------------- | ------------------------------------------------------------------ |
-| `getElementById(id)`                         | `getElementById` that infers its return type from where it is used |
-| `loadScript(src, options?)`                  | Loads an external JavaScript file                                  |
-| `requestInterval(callback, delay, options?)` | Runs repeatedly at an interval, using `requestAnimationFrame`      |
-| `requestTimeout(callback, delay, options?)`  | Runs after a given time, using `requestAnimationFrame`             |
+| Function                                             | Description                                                        |
+| ---------------------------------------------------- | ------------------------------------------------------------------ |
+| `getElementById(id)`                                 | `getElementById` that infers its return type from where it is used |
+| `loadScript(src, options?)`                          | Loads an external JavaScript file                                  |
+| `playInterpolator(interpolator, callback, options?)` | Plays an interpolator over time using `requestAnimationFrame`      |
+| `requestInterval(callback, delay, options?)`         | Runs repeatedly at an interval, using `requestAnimationFrame`      |
+| `requestTimeout(callback, delay, options?)`          | Runs after a given time, using `requestAnimationFrame`             |
 
 ### `getElementById`
 
@@ -85,6 +86,42 @@ The following are not supported:
 - A failed `integrity` check also results in `NetworkError`, the same as a network error
 - Loading ES modules. Use the standard `import()` instead
 
+### `playInterpolator`
+
+```ts
+playInterpolator<T>(
+  interpolator: (t: number) => T,
+  callback: (value: T, t: number) => void,
+  options?: PlayInterpolatorOptions,
+): () => void
+```
+
+Plays an interpolator (a function that returns a value for `t`) over `duration` milliseconds and returns a function that stops it. On each frame, it computes the elapsed fraction `t` (0 to 1) and calls `callback(interpolator(ease(t)), t)`. You can pass interpolators from d3-interpolate or [`@fringeworks/interpolate`](https://www.npmjs.com/package/@fringeworks/interpolate) as is, and animate targets d3-transition does not handle (maps, Canvas, and so on).
+
+- The first callback is called on the next frame, not at the time of the call
+- On the last frame, the callback is called with `t` of 1, and then `onFinish` is called
+- Time keeps passing while frames are paused, such as in a hidden tab. When frames resume, playback continues from the `t` at that time
+- A `duration` of `NaN` or a negative value is treated as `0`, and playback ends on the first frame with `t` of 1
+
+```ts
+import { interpolateFormattedNumber } from '@fringeworks/interpolate';
+
+const stop = playInterpolator(
+  interpolateFormattedNumber(0, 12000),
+  (text) => {
+    element.textContent = text;
+  },
+  { duration: 1000 },
+);
+```
+
+| Option      | Type                    | Description                                                                                        |
+| ----------- | ----------------------- | -------------------------------------------------------------------------------------------------- |
+| `duration?` | `number`                | The playback time in milliseconds. Defaults to `250`                                               |
+| `ease?`     | `(t: number) => number` | An easing function applied to the elapsed fraction. Defaults to linear                             |
+| `onFinish?` | `() => void`            | Called when playback reaches the end. Not called when stopped by the returned function or `signal` |
+| `signal?`   | `AbortSignal`           | Stops playback when aborted                                                                        |
+
 ### `requestInterval`
 
 ```ts
@@ -127,11 +164,12 @@ const cancel = requestTimeout(() => hideToast(), 3000);
 
 ### Types
 
-| Type                     | Description                   |
-| ------------------------ | ----------------------------- |
-| `LoadScriptOptions`      | Options for `loadScript`      |
-| `RequestIntervalOptions` | Options for `requestInterval` |
-| `RequestTimeoutOptions`  | Options for `requestTimeout`  |
+| Type                      | Description                    |
+| ------------------------- | ------------------------------ |
+| `LoadScriptOptions`       | Options for `loadScript`       |
+| `PlayInterpolatorOptions` | Options for `playInterpolator` |
+| `RequestIntervalOptions`  | Options for `requestInterval`  |
+| `RequestTimeoutOptions`   | Options for `requestTimeout`   |
 
 ## License
 

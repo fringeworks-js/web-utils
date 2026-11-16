@@ -27,12 +27,13 @@ import loadScript from '@fringeworks/web-utils/loadScript';
 
 ## API
 
-| 関数                                         | 説明                                                           |
-| -------------------------------------------- | -------------------------------------------------------------- |
-| `getElementById(id)`                         | 受け取る側の型から戻り値の型を推論する `getElementById`        |
-| `loadScript(src, options?)`                  | 外部の JavaScript を読み込む                                   |
-| `requestInterval(callback, delay, options?)` | `requestAnimationFrame` を使って、一定の間隔で繰り返し実行する |
-| `requestTimeout(callback, delay, options?)`  | `requestAnimationFrame` を使って、指定の時間後に実行する       |
+| 関数                                                 | 説明                                                           |
+| ---------------------------------------------------- | -------------------------------------------------------------- |
+| `getElementById(id)`                                 | 受け取る側の型から戻り値の型を推論する `getElementById`        |
+| `loadScript(src, options?)`                          | 外部の JavaScript を読み込む                                   |
+| `playInterpolator(interpolator, callback, options?)` | interpolator を `requestAnimationFrame` を使って時間で再生する |
+| `requestInterval(callback, delay, options?)`         | `requestAnimationFrame` を使って、一定の間隔で繰り返し実行する |
+| `requestTimeout(callback, delay, options?)`          | `requestAnimationFrame` を使って、指定の時間後に実行する       |
 
 ### `getElementById`
 
@@ -85,6 +86,42 @@ await loadScript('/vendor/library-plugin.js');
 - `integrity` の検証に失敗した場合も、ネットワークのエラーと同じ `NetworkError` になる
 - ES モジュールの読み込み。標準の `import()` を使う
 
+### `playInterpolator`
+
+```ts
+playInterpolator<T>(
+  interpolator: (t: number) => T,
+  callback: (value: T, t: number) => void,
+  options?: PlayInterpolatorOptions,
+): () => void
+```
+
+interpolator（`t` に応じた値を返す関数）を `duration` ミリ秒かけて再生し、停止する関数を返します。フレームごとに経過時間の割合 `t`（0 〜 1）を求め、`callback(interpolator(ease(t)), t)` を呼びます。d3-interpolate や [`@fringeworks/interpolate`](https://www.npmjs.com/package/@fringeworks/interpolate) の interpolator をそのまま渡せ、d3-transition を使えない対象（地図や Canvas など）も動かせます。
+
+- 最初のコールバックは次のフレームで呼びます。呼び出した時点では呼びません
+- 最後のフレームでは `t` を 1 にして呼び、そのあと `onFinish` を呼びます
+- 非表示のタブなどでフレームが止まっている間も時間は進みます。再開したときは、その時点の `t` から続けます
+- `duration` が `NaN` や負の値の場合は `0` として扱い、最初のフレームで `t` を 1 にして終わります
+
+```ts
+import { interpolateFormattedNumber } from '@fringeworks/interpolate';
+
+const stop = playInterpolator(
+  interpolateFormattedNumber(0, 12000),
+  (text) => {
+    element.textContent = text;
+  },
+  { duration: 1000 },
+);
+```
+
+| オプション  | 型                      | 説明                                                                                 |
+| ----------- | ----------------------- | ------------------------------------------------------------------------------------ |
+| `duration?` | `number`                | 再生する時間（ミリ秒）。デフォルトは `250`                                           |
+| `ease?`     | `(t: number) => number` | 経過時間の割合に適用するイージング関数。デフォルトは線形                             |
+| `onFinish?` | `() => void`            | 最後まで再生したときに呼ぶ関数。戻り値の関数や `signal` で途中で止めた場合は呼ばない |
+| `signal?`   | `AbortSignal`           | 中断されると停止する                                                                 |
+
 ### `requestInterval`
 
 ```ts
@@ -127,11 +164,12 @@ const cancel = requestTimeout(() => hideToast(), 3000);
 
 ### 型
 
-| 型                       | 説明                           |
-| ------------------------ | ------------------------------ |
-| `LoadScriptOptions`      | `loadScript` のオプション      |
-| `RequestIntervalOptions` | `requestInterval` のオプション |
-| `RequestTimeoutOptions`  | `requestTimeout` のオプション  |
+| 型                        | 説明                            |
+| ------------------------- | ------------------------------- |
+| `LoadScriptOptions`       | `loadScript` のオプション       |
+| `PlayInterpolatorOptions` | `playInterpolator` のオプション |
+| `RequestIntervalOptions`  | `requestInterval` のオプション  |
+| `RequestTimeoutOptions`   | `requestTimeout` のオプション   |
 
 ## ライセンス
 
