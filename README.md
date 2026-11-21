@@ -78,19 +78,19 @@ await loadScript('/vendor/library-plugin.js');
 | `integrity?`   | `string`                           | The `integrity` attribute of the `<script>` element (Subresource Integrity)                                                                                                            |
 | `nonce?`       | `string`                           | The `nonce` attribute of the `<script>` element (Content Security Policy)                                                                                                              |
 
-The following are not supported:
+How it decides whether a script is loaded, and how it uses options:
 
-- `<script>` elements written in the HTML are not treated as loaded
-- Reloading with `reload` does not undo what the script has already done
-- For the same URL, options of later calls are not used (except `reload`)
-- A failed `integrity` check also results in `NetworkError`, the same as a network error
-- Loading ES modules. Use the standard `import()` instead
+- Whether a script is loaded is decided by the `<script>` elements this function added. `<script>` elements written in the HTML are not counted
+- `reload` replaces the `<script>` element and runs the script again. What the script has already done stays as it is
+- Options are used when the URL is loaded. When called for a URL that is loading or already loaded, the options of that call are not used (they are used when reloading with `reload`)
+- A failed `integrity` check also rejects with `NetworkError`, the same as a network error
+- To load ES modules, use the standard `import()`
 
 ### `playInterpolator`
 
 ```ts
 playInterpolator<T>(
-  interpolator: (t: number) => T,
+  interpolator: Interpolator<T>,
   callback: (value: T, t: number) => void,
   options?: PlayInterpolatorOptions,
 ): () => void
@@ -115,12 +115,12 @@ const stop = playInterpolator(
 );
 ```
 
-| Option      | Type                    | Description                                                                                        |
-| ----------- | ----------------------- | -------------------------------------------------------------------------------------------------- |
-| `duration?` | `number`                | The playback time in milliseconds. Defaults to `250`                                               |
-| `ease?`     | `(t: number) => number` | An easing function applied to the elapsed fraction. Defaults to linear                             |
-| `onFinish?` | `() => void`            | Called when playback reaches the end. Not called when stopped by the returned function or `signal` |
-| `signal?`   | `AbortSignal`           | Stops playback when aborted                                                                        |
+| Option      | Type             | Description                                                                                        |
+| ----------- | ---------------- | -------------------------------------------------------------------------------------------------- |
+| `duration?` | `number`         | The playback time in milliseconds. Defaults to `250`                                               |
+| `ease?`     | `EasingFunction` | An easing function applied to the elapsed fraction. Defaults to linear                             |
+| `onFinish?` | `() => void`     | Called when playback reaches the end. Not called when stopped by the returned function or `signal` |
+| `signal?`   | `AbortSignal`    | Stops playback when aborted                                                                        |
 
 ### `requestInterval`
 
@@ -164,12 +164,25 @@ const cancel = requestTimeout(() => hideToast(), 3000);
 
 ### Types
 
-| Type                      | Description                    |
-| ------------------------- | ------------------------------ |
-| `LoadScriptOptions`       | Options for `loadScript`       |
-| `PlayInterpolatorOptions` | Options for `playInterpolator` |
-| `RequestIntervalOptions`  | Options for `requestInterval`  |
-| `RequestTimeoutOptions`   | Options for `requestTimeout`   |
+| Type                      | Description                                                                                                 |
+| ------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `LoadScriptOptions`       | Options for `loadScript`                                                                                    |
+| `PlayInterpolatorOptions` | Options for `playInterpolator`                                                                              |
+| `Interpolator<VALUE>`     | A function that returns a value for `t` (0 to 1): `(t: number) => VALUE` (a type from `@fringeworks/types`) |
+| `EasingFunction`          | An easing function: `(t: number) => number` (a type from `@fringeworks/types`)                              |
+| `RequestIntervalOptions`  | Options for `requestInterval`                                                                               |
+| `RequestTimeoutOptions`   | Options for `requestTimeout`                                                                                |
+
+## Supported browsers
+
+These functions use DOM APIs, so they run in browsers (importing the module alone also works in Node.js and SSR). The following versions of the major browsers are supported.
+
+| Browser         | Supported versions    |
+| --------------- | --------------------- |
+| Google Chrome   | 88 (January 2021) +   |
+| Microsoft Edge  | 88 (January 2021) +   |
+| Apple Safari    | 14 (September 2020) + |
+| Mozilla Firefox | 85 (January 2021) +   |
 
 ## License
 

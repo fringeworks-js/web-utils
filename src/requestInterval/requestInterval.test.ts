@@ -182,10 +182,15 @@ describe('requestInterval', () => {
       const fn = vi.fn();
       const controller = new AbortController();
       controller.abort();
-      requestInterval(fn, 100, { immediate: true, signal: controller.signal });
+      const stop = requestInterval(fn, 100, {
+        immediate: true,
+        signal: controller.signal,
+      });
       frames.frames(16, 500);
       expect(fn).not.toHaveBeenCalled();
       expect(frames.requestAnimationFrame).not.toHaveBeenCalled();
+      // 返した停止用関数は、呼んでも何も起きない
+      expect(() => stop()).not.toThrow();
     });
 
     it('回数制限に達した後と停止後にイベントリスナーを削除する', () => {

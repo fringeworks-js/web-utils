@@ -1,4 +1,4 @@
-import type { PlayInterpolatorOptions } from './types';
+import type { Interpolator, PlayInterpolatorOptions } from './types';
 
 /**
  * interpolator（`t` に応じた値を返す関数）を、requestAnimationFrame を使って時間で再生する関数。\
@@ -11,7 +11,7 @@ import type { PlayInterpolatorOptions } from './types';
  * @returns 停止用関数
  */
 export default function playInterpolator<T>(
-  interpolator: (t: number) => T,
+  interpolator: Interpolator<T>,
   callback: (value: T, t: number) => void,
   options: PlayInterpolatorOptions = {},
 ): () => void {

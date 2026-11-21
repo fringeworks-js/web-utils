@@ -139,10 +139,14 @@ describe('playInterpolator', () => {
       const controller = new AbortController();
       controller.abort();
       const callback = vi.fn();
-      playInterpolator(double, callback, { signal: controller.signal });
+      const stop = playInterpolator(double, callback, {
+        signal: controller.signal,
+      });
       frames.frame(1000);
       expect(callback).not.toHaveBeenCalled();
       expect(frames.requestAnimationFrame).not.toHaveBeenCalled();
+      // 返した停止用関数は、呼んでも何も起きない
+      expect(() => stop()).not.toThrow();
     });
 
     it('最後まで再生したらリスナーを外す', () => {

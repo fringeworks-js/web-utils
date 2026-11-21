@@ -31,3 +31,6 @@ lerna-debug.log*
 tsconfig.tsbuildinfo
 
 memo.md
+
+.vitest-attachments/
+**/__screenshots__/

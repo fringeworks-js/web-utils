@@ -79,10 +79,12 @@ describe('requestTimeout', () => {
 
   it('Infinityの場合は実行せず、フレームも要求しない', () => {
     const fn = vi.fn();
-    requestTimeout(fn, Infinity);
+    const cancel = requestTimeout(fn, Infinity);
     expect(frames.requestAnimationFrame).not.toHaveBeenCalled();
     frames.frame(1e9);
     expect(fn).not.toHaveBeenCalled();
+    // 返したキャンセル用関数は、呼んでも何も起きない
+    expect(() => cancel()).not.toThrow();
   });
 
   describe('signal', () => {
@@ -100,10 +102,11 @@ describe('requestTimeout', () => {
       const fn = vi.fn();
       const controller = new AbortController();
       controller.abort();
-      requestTimeout(fn, 100, { signal: controller.signal });
+      const cancel = requestTimeout(fn, 100, { signal: controller.signal });
       expect(frames.requestAnimationFrame).not.toHaveBeenCalled();
       frames.frame(200);
       expect(fn).not.toHaveBeenCalled();
+      expect(() => cancel()).not.toThrow();
     });
 
     it('実行後とキャンセル後にイベントリスナーを削除する', () => {

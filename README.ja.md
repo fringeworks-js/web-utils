@@ -78,19 +78,19 @@ await loadScript('/vendor/library-plugin.js');
 | `integrity?`   | `string`                           | `<script>` 要素の `integrity` 属性（サブリソース完全性）                                                                                                |
 | `nonce?`       | `string`                           | `<script>` 要素の `nonce` 属性（Content Security Policy）                                                                                               |
 
-次のことには対応していません。
+読み込み済みかどうかの判断とオプションの扱いは、次のとおりです。
 
-- HTML に元から書かれている `<script>` 要素は、読み込み済みとして扱わない
-- `reload` で読み込み直しても、既に実行されたスクリプトの処理は取り消されない
-- 同じ URL では、2回目以降の呼び出しのオプションは使われない（`reload` を除く）
-- `integrity` の検証に失敗した場合も、ネットワークのエラーと同じ `NetworkError` になる
-- ES モジュールの読み込み。標準の `import()` を使う
+- 読み込み済みかどうかは、この関数で読み込んだ `<script>` 要素で判断します。HTML に元から書かれている `<script>` 要素は数えません
+- `reload` は `<script>` 要素を入れ替えて、スクリプトをもう一度実行します。前に実行したスクリプトの処理は、そのまま残ります
+- オプションは、その URL を読み込むときのものを使います。読み込み中や読み込み済みの URL を呼び出したときは、そのときのオプションを使いません（`reload` で読み込み直すときは使います）
+- `integrity` の検証に失敗した場合も、ネットワークのエラーと同じ `NetworkError` で reject します
+- ES モジュールを読み込むときは、標準の `import()` を使います
 
 ### `playInterpolator`
 
 ```ts
 playInterpolator<T>(
-  interpolator: (t: number) => T,
+  interpolator: Interpolator<T>,
   callback: (value: T, t: number) => void,
   options?: PlayInterpolatorOptions,
 ): () => void
@@ -115,12 +115,12 @@ const stop = playInterpolator(
 );
 ```
 
-| オプション  | 型                      | 説明                                                                                 |
-| ----------- | ----------------------- | ------------------------------------------------------------------------------------ |
-| `duration?` | `number`                | 再生する時間（ミリ秒）。デフォルトは `250`                                           |
-| `ease?`     | `(t: number) => number` | 経過時間の割合に適用するイージング関数。デフォルトは線形                             |
-| `onFinish?` | `() => void`            | 最後まで再生したときに呼ぶ関数。戻り値の関数や `signal` で途中で止めた場合は呼ばない |
-| `signal?`   | `AbortSignal`           | 中断されると停止する                                                                 |
+| オプション  | 型               | 説明                                                                                 |
+| ----------- | ---------------- | ------------------------------------------------------------------------------------ |
+| `duration?` | `number`         | 再生する時間（ミリ秒）。デフォルトは `250`                                           |
+| `ease?`     | `EasingFunction` | 経過時間の割合に適用するイージング関数。デフォルトは線形                             |
+| `onFinish?` | `() => void`     | 最後まで再生したときに呼ぶ関数。戻り値の関数や `signal` で途中で止めた場合は呼ばない |
+| `signal?`   | `AbortSignal`    | 中断されると停止する                                                                 |
 
 ### `requestInterval`
 
@@ -164,12 +164,25 @@ const cancel = requestTimeout(() => hideToast(), 3000);
 
 ### 型
 
-| 型                        | 説明                            |
-| ------------------------- | ------------------------------- |
-| `LoadScriptOptions`       | `loadScript` のオプション       |
-| `PlayInterpolatorOptions` | `playInterpolator` のオプション |
-| `RequestIntervalOptions`  | `requestInterval` のオプション  |
-| `RequestTimeoutOptions`   | `requestTimeout` のオプション   |
+| 型                        | 説明                                                                                  |
+| ------------------------- | ------------------------------------------------------------------------------------- |
+| `LoadScriptOptions`       | `loadScript` のオプション                                                             |
+| `PlayInterpolatorOptions` | `playInterpolator` のオプション                                                       |
+| `Interpolator<VALUE>`     | `t`（0 〜 1）に応じた値を返す関数 `(t: number) => VALUE`（`@fringeworks/types` の型） |
+| `EasingFunction`          | イージング関数 `(t: number) => number`（`@fringeworks/types` の型）                   |
+| `RequestIntervalOptions`  | `requestInterval` のオプション                                                        |
+| `RequestTimeoutOptions`   | `requestTimeout` のオプション                                                         |
+
+## 対応ブラウザー
+
+DOM の API を使うため、ブラウザーで動きます（モジュールを import するだけなら、Node.js や SSR でも読み込めます）。下記のメジャーなブラウザーのバージョンに対応しています。
+
+| ブラウザー      | 対応バージョン      |
+| --------------- | ------------------- |
+| Google Chrome   | 88 (2021年1月) 以降 |
+| Microsoft Edge  | 88 (2021年1月) 以降 |
+| Apple Safari    | 14 (2020年9月) 以降 |
+| Mozilla Firefox | 85 (2021年1月) 以降 |
 
 ## ライセンス
 
