@@ -1,6 +1,6 @@
 {
   "name": "@fringeworks/web-utils",
-  "version": "0.9.4",
+  "version": "1.0.0",
   "private": true,
   "description": "A library some will find handy, providing utilities for the web.",
   "keywords": [

@@ -1,0 +1,49 @@
+# v<version> のタグを push したら、確認・ビルドしてから npm の staging area に上げる。
+# 公開するのは、npmjs.com の Staged Packages か `npm stage approve` で 2FA で承認したとき。
+# 認証は npm の Trusted Publishing（OIDC）で行い、トークンは使わない。
+# npmjs.com のパッケージの設定で、このファイル名（publish.yml）を登録しておく。
+name: Publish
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: read
+  id-token: write # Trusted Publishing と provenance に必要
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      # package.json の packageManager のバージョンを使う
+      - uses: pnpm/action-setup@v4
+
+      # npm stage publish には npm 11.15.0 以降が要る（Node.js 26 に付いてくる npm で足りる）
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 26
+          registry-url: https://registry.npmjs.org
+          cache: pnpm
+
+      - name: Check that the tag matches the version
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          if [ "v$VERSION" != "$GITHUB_REF_NAME" ]; then
+            echo "::error::Tag $GITHUB_REF_NAME does not match package.json version $VERSION"
+            exit 1
+          fi
+
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm check
+      - run: pnpm lint
+      # ブラウザーのテストに使うブラウザー（pnpm install では入らない）
+      - run: pnpm exec playwright install --with-deps chromium firefox webkit
+      # 公開の前なので、ブラウザーのテストは3つのエンジンで実行する
+      - run: pnpm test:browsers
+      - run: pnpm build
+      # dist/package.json を使うため、dist で実行する
+      - run: npm stage publish
+        working-directory: dist
